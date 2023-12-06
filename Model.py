@@ -58,15 +58,16 @@ class MultiHeadAttention(nn.Module):
         return output
 
 
-class ImageCaptioningTransformer(nn.Module):
-    def __init__(self, word_to_idx, input_dim, wordvec_dim, num_heads=4,
-                 num_layers=2, max_length=50):
+class GraphCaptioningModel(nn.Module):
+    def __init__(self, word_to_idx, input_dim, wordvec_dim, num_heads=8,
+                 num_layers=6, max_length=5000):
         super().__init__()
         vocab_size = len(word_to_idx)
         self.vocab_size = vocab_size
         self._null = word_to_idx["<NULL>"]
         self._start = word_to_idx.get("<START>", None)
         self._end = word_to_idx.get("<END>", None)
+        self.image_encoder = models.resnet50(pretrained=True)
         self.visual_projection = nn.Linear(input_dim, wordvec_dim)
         self.embedding = nn.Embedding(vocab_size, wordvec_dim, padding_idx=self._null)
         self.positional_encoding = PositionalEncoding(wordvec_dim, max_len=max_length)
@@ -84,11 +85,12 @@ class ImageCaptioningTransformer(nn.Module):
             module.bias.data.zero_()
             module.weight.data.fill_(1.0)
 
-    def forward(self, features, captions):
+    def forward(self, image, captions):
         N, T = captions.shape
+        image_encoding = self.image_encoder(image)
         scores = torch.empty((N, T, self.vocab_size))
         embeds = self.positional_encoding(self.embedding(captions))
-        proj_feat = self.visual_projection(features).reshape(N, -1, embeds.shape[-1])
+        proj_feat = self.visual_projection(image_encoding).reshape(N, -1, embeds.shape[-1])
         tgt_mask = torch.ones(T, T)
         tgt_mask = torch.tril(tgt_mask)
         scores = self.transformer(embeds, proj_feat, tgt_mask)
