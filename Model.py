@@ -14,6 +14,7 @@ class PositionalEncoding(nn.Module):
         exponents = torch.pow(1e4, -torch.arange(0, embed_dim, 2) / embed_dim)
         pe[0,:,torch.arange(0,embed_dim,2)] = torch.sin(i * exponents)
         pe[0,:,torch.arange(1,embed_dim,2)] = torch.cos(i * exponents)
+        self.register_buffer('pe', pe)
 
     def forward(self, x):
         N, S, D = x.shape
