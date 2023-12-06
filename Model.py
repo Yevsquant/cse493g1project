@@ -59,7 +59,7 @@ class MultiHeadAttention(nn.Module):
 
 
 class GraphCaptioningModel(nn.Module):
-    def __init__(self, word_to_idx, input_dim, wordvec_dim, num_heads=8,
+    def __init__(self, word_to_idx, wordvec_dim, num_heads=8,
                  num_layers=6, max_length=5000):
         super().__init__()
         vocab_size = len(word_to_idx)
@@ -68,8 +68,9 @@ class GraphCaptioningModel(nn.Module):
         self._start = word_to_idx.get("<START>", None)
         self._end = word_to_idx.get("<END>", None)
         self.image_encoder = models.resnet50(pretrained=True)
+        self.image_encoder = nn.Sequential(*list(self.image_encoder.children())[:-1])
         # self.conv1 = GCNConv(in_channels, hidden_channels)
-        self.visual_projection = nn.Linear(input_dim, wordvec_dim)
+        self.visual_projection = nn.Linear(2048, wordvec_dim)
         self.embedding = nn.Embedding(vocab_size, wordvec_dim, padding_idx=self._null)
         self.positional_encoding = PositionalEncoding(wordvec_dim, max_len=max_length)
         decoder_layer = TransformerDecoderLayer(input_dim=wordvec_dim, num_heads=num_heads)
