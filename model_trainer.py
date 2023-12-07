@@ -1,5 +1,5 @@
 import numpy as np
-
+from model_utils import create_minibatch
 import torch
 
 class Trainer(object):
