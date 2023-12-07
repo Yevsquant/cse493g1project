@@ -35,6 +35,4 @@ csv_files1 = ['/content/data_kk0.csv', '/content/data_cr0.csv', '/content/data_g
 csv_files2 = ['/content/data_kk0.csv', '/content/data_cr0.csv', '/content/data_gv0.csv', '/content/data_sp0.csv',
               '/content/data_kk1.csv', '/content/data_cr1.csv', '/content/data_gv1.csv', '/content/data_sp1.csv']
 dataset_default = GraphImageDataset(csv_files=csv_files1)
-dataloader_default = DataLoader(dataset_default, batch_size=32, shuffle=True)
 dataset_mixed = GraphImageDataset(csv_files=csv_files2)
-dataloader_mixed = DataLoader(dataset_mixed, batch_size=32, shuffle=True)
