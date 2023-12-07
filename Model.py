@@ -3,6 +3,7 @@ import torch.nn as nn
 import torchvision.models as models
 from torchvision.transforms import functional as F
 from PIL import Image
+import copy
 
 class PositionalEncoding(nn.Module):
     def __init__(self, embed_dim, dropout=0.1, max_length=5000):
