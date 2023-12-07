@@ -28,3 +28,18 @@ def decode_captions(captions, idx_to_word):
     if singleton:
         decoded = decoded[0]
     return decoded
+
+def encode_captions(captions, word_to_idx):
+    N = len(captions)
+    T = 2000
+    encoded = np.zeros((N, T))
+    encoded[:,0] = 1
+    for n in range(N):
+        for t in range(T):
+            if t < len(captions[n]):
+                encoded[i][t+1] = word_to_idx[captions[n][t]]
+            elif t == len(captions[n]):
+                encoded[n][t+1] = word_to_idx["<END>"]
+            else:
+                break
+    return encoded
