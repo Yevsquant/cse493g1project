@@ -1,0 +1,3 @@
+The datasets_medium is splited into two due to its size exceeding 100MB.
+One contains cr0, cr1, gv0, and gv1.
+The other contains kk0, kk1, sp0, and sp1.
