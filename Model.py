@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
 import torchvision.models as models
-from torchvision.transforms import functional as F
+from torch.nn import functional as F
 from PIL import Image
 import copy
+import math
 
 class PositionalEncoding(nn.Module):
     def __init__(self, embed_dim, dropout=0.1, max_length=5000):
@@ -73,7 +74,7 @@ class GraphCaptioningModel(nn.Module):
         # self.conv1 = GCNConv(in_channels, hidden_channels)
         self.visual_projection = nn.Linear(2048, wordvec_dim)
         self.embedding = nn.Embedding(vocab_size, wordvec_dim, padding_idx=self._null)
-        self.positional_encoding = PositionalEncoding(wordvec_dim, max_len=max_length)
+        self.positional_encoding = PositionalEncoding(wordvec_dim, max_length=max_length)
         decoder_layer = TransformerDecoderLayer(input_dim=wordvec_dim, num_heads=num_heads)
         self.transformer = TransformerDecoder(decoder_layer, num_layers=num_layers)
         self.apply(self._init_weights)
@@ -93,7 +94,7 @@ class GraphCaptioningModel(nn.Module):
         image_encoding = self.image_encoder(image)
         scores = torch.empty((N, T, self.vocab_size))
         embeds = self.positional_encoding(self.embedding(captions))
-        proj_feat = self.visual_projection(image_encoding).reshape(N, -1, embeds.shape[-1])
+        proj_feat = self.visual_projection(image_encoding.reshape((N,2048))).reshape(N, -1, embeds.shape[-1])
         tgt_mask = torch.ones(T, T)
         tgt_mask = torch.tril(tgt_mask)
         scores = self.transformer(embeds, proj_feat, tgt_mask)
