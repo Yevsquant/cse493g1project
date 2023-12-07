@@ -4,10 +4,8 @@ def create_minibatch(data, batch_size=100, split="train"):
     split_size = data["%s_captions" % split].shape[0]
     mask = np.random.choice(split_size, batch_size)
     captions = data["%s_captions" % split][mask]
-    image_idxs = data["%s_image_idxs" % split][mask]
-    image_features = data["%s_features" % split][image_idxs]
-    urls = data["%s_urls" % split][image_idxs]
-    return captions, image_features, urls
+    image_features = data["%s_features" % split][mask]
+    return captions, image_features
 
 def decode_captions(captions, idx_to_word):
     singleton = False
@@ -37,7 +35,7 @@ def encode_captions(captions, word_to_idx):
     for n in range(N):
         for t in range(T):
             if t < len(captions[n]):
-                encoded[i][t+1] = word_to_idx[captions[n][t]]
+                encoded[n][t+1] = word_to_idx[captions[n][t]]
             elif t == len(captions[n]):
                 encoded[n][t+1] = word_to_idx["<END>"]
             else:

@@ -28,7 +28,7 @@ class Trainer(object):
         minibatch = create_minibatch(
             self.data, batch_size=self.batch_size, split="train"
         )
-        captions, features, urls = minibatch
+        captions, features = minibatch
         captions_in = captions[:, :-1]
         captions_out = captions[:, 1:]
         mask = captions_out != self.model._null
