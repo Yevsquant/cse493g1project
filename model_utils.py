@@ -35,7 +35,7 @@ def encode_captions(captions, word_to_idx):
     for n in range(N):
         for t in range(T):
             if t < len(captions[n]):
-                encoded[i][t+1] = word_to_idx[captions[n][t]]
+                encoded[n][t+1] = word_to_idx[captions[n][t]]
             elif t == len(captions[n]):
                 encoded[n][t+1] = word_to_idx["<END>"]
             else:
