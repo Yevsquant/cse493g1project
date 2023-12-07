@@ -71,7 +71,6 @@ class GraphCaptioningModel(nn.Module):
         self._end = word_to_idx.get("<END>", None)
         self.image_encoder = models.resnet50(pretrained=True)
         self.image_encoder = nn.Sequential(*list(self.image_encoder.children())[:-1])
-        # self.conv1 = GCNConv(in_channels, hidden_channels)
         self.visual_projection = nn.Linear(2048, wordvec_dim)
         self.embedding = nn.Embedding(vocab_size, wordvec_dim, padding_idx=self._null)
         self.positional_encoding = PositionalEncoding(wordvec_dim, max_length=max_length)
