@@ -29,10 +29,11 @@ class GraphImageDataset(Dataset):
             data_array = self.transform(data_array)
 
         return data_array, data_dict
-
+"""
 # you might want to change the file names based on your address
 csv_files1 = ['/content/data_kk0.csv', '/content/data_cr0.csv', '/content/data_gv0.csv', '/content/data_sp0.csv']
 csv_files2 = ['/content/data_kk0.csv', '/content/data_cr0.csv', '/content/data_gv0.csv', '/content/data_sp0.csv',
               '/content/data_kk1.csv', '/content/data_cr1.csv', '/content/data_gv1.csv', '/content/data_sp1.csv']
 dataset_default = GraphImageDataset(csv_files=csv_files1)
 dataset_mixed = GraphImageDataset(csv_files=csv_files2)
+"""
